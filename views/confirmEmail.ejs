@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+</head>
+
+<style>
+
+    *{
+        box-sizing: border-box;
+        margin: 0;
+    }
+
+    body{
+
+      
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .main-container{
+
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        left: 0;
+        top: 0;
+        max-width: 100%;
+        background-color: rgb(212, 212, 212);
+        /* border-radius: 10px; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .main-container-inner{
+
+        width: 500px;
+        max-width: 95%;
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        display:flex;
+        align-items:center;
+        /* justify-content:center; */
+        flex-direction:column;
+    }
+
+    .logo-top{
+
+        width: 100%;
+        text-align: center;
+
+    }
+
+    .logo-top span{
+
+        color: blue;
+    }
+
+    .message-title{
+
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .message-body{
+
+        margin-top: 10px;
+    }
+
+    .message-body p{
+
+        margin-top: 10px;
+        font-size: 14px;
+        color: black ;
+        /* font-weight: bold; */
+        text-align: center;
+    }
+
+    .actual-code{
+
+        margin-top: 20px;
+        margin-bottom: 20px;
+       
+    }
+
+    /* .actual-code p{
+
+         font-size: 40px;
+        font-weight: bold;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        letter-spacing: 20px;
+      
+
+    } */
+    
+    .message-body span{
+
+        color: blue;
+        /* margin-top: 10px; */
+    }
+
+    @media all and (max-width: 245px) { /* your content here */ 
+    
+        .actual-code p{
+
+            letter-spacing: 0;
+
+        }
+    
+    
+    }
+
+</style>
+<body>
+
+    <div class="main-container">
+
+        
+        <div class="main-container-inner">
+            
+            <div class="logo-top">
+                <h3>School <span>Finder</span> </h3>
+            </div>
+
+            <div class="message-title">
+                <h2>Let's Sign you Up</h2>
+            </div>
+
+            <div class="message-body">
+                <p>Use this Code to Sign Up to School finder. <br> This Code will expire in 20 minutes</p>
+
+            </div>
+
+            <div style="margin-top: 20px;margin-bottom: 20px;" class="actual-code">
+
+                <p style="font-size: 40px;letter-spacing: 20px;font-weight: bold;">123456</p>
+
+            </div>
+
+            <div class="message-body">
+                <p>This Code will Securely Sign You Up. <br> <br> <span>If You did not request this email, you can safely ignore it</span> </p>
+            </div>
+            
+
+        </div>
+
+       
+
+    </div>
+
+
+    
+</body>
+</html>
