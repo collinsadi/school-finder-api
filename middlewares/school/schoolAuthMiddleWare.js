@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
-const jwtsecret = process.env.JWT_VENDOR
+const jwtsecret = process.env.JWT_FINDER
 
 
 const schoolAuth = (request, response,next) => {

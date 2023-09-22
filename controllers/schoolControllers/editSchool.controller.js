@@ -108,7 +108,7 @@ const editContactDetails = async (request, response) => {
         }
 
 
-        const school = await School.findByIdAndUpdate(id, { website, address, phone, email })
+        const school = await School.findByIdAndUpdate(id, { website,location:address, phone, email })
         
         console.log(school)
 
