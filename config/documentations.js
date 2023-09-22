@@ -1,6 +1,7 @@
 
 // const userRoute = require('../documentation/Users.doc')
 const finderRoute = require("../docs/finder.doc")
+const schoolRoute = require("../docs/school.doc")
 
 
 
@@ -26,13 +27,22 @@ const swaggerDocumentations = {
       {  
         name: "Finder",
         description: "School Finder Routes"
-    }
+    },
+      {  
+        name: "School",
+        description: "Routes for Creating and Managing Schools"
+    },
+      {  
+        name: "Favorite",
+        description: "Routes for Managing Finder's Favorites"
+    },
 
 
     ],
     paths: {
 
-         ...finderRoute,
+      ...finderRoute,
+      ...schoolRoute
   
     }
 

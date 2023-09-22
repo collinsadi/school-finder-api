@@ -10,7 +10,7 @@ const swaggerDocs = require('swagger-ui-express')
 
 // Routes
 const finderRoutes = require("./routes/finder.routes")
-
+const schoolRoutes = require("./routes/school.routes")
 
 
 
@@ -56,3 +56,4 @@ app.get("/", (request, response) => {
 
 // Use Api Routes
 app.use("/v1",finderRoutes)
+app.use("/v1",schoolRoutes)

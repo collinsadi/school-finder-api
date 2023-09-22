@@ -1,36 +1,36 @@
+
+const School = require("../../models/school.model")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const sendEmail = require("../../config/sendEmail")
-const Finder = require("../../models/finder.model")
 const ejs = require("ejs")
 const path = require("path")
 require("dotenv").config()
 const jwtsecret = process.env.JWT_FINDER
 
 
-
-const finderSignUp = async (request, response) => {
+const schoolSignUp = async (request, response) => {
     
-    const {firstName,lastName,email,password} = request.body
+    const {name,email,phone,password,website,registrationDocs} = request.body
 
     try {
-    
-       if(!firstName){
+        
+        if (!name) {
+            
+            return response.status(422).json({status:false, message:"School Name is Required"})
+        }
 
-        return response.status(422).json({ status: false, message: "First Name is Required" })
-           
-       }
-       if(!lastName){
+        if (!email) {
+            
+            return response.status(422).json({status:false, message:"School Email is Required"})
+        }
 
-        return response.status(422).json({ status: false, message: "Last Name is Required" })
-           
-       }
-       if(!email){
+        if (!phone) {
+            
+            return response.status(422).json({status:false, message:"School Phone Number Required"})
+        }
 
-        return response.status(422).json({ status: false, message: "Email is Required" })
-           
-       }
-       if(email.indexOf("@") === -1){
+        if(email.indexOf("@") === -1){
 
         return response.status(422).json({ status: false, message: "Email a Valid Email" })
            
@@ -46,19 +46,37 @@ const finderSignUp = async (request, response) => {
            
        }
 
-       const finderExists = await Finder.findOne({email})
+        if(!website){
 
-        if (finderExists) {
-          
-            return response.status(401).json({status:false, message:"Email Already In Use"})
-            
+            return response.status(422).json({status:false, message:"School Website Required"})
         }
+
+        if(!registrationDocs){
+
+            return response.status(422).json({status:false, message:"School Registration Document Required"})
+        }
+        
+        const schoolWebsiteExists = await School.findOne({ website })
+        
+        if (schoolWebsiteExists) {
+            
+            return response.status(401).json({status:false, message:"This Website is already Verified With another School"})
+        }
+
+        const schoolExists = await School.findOne({ email })
+        
+        if (schoolExists) {
+            
+            return response.status(401).json({status:false, message:"Email Already Registered with Another School"})
+        }
+
+
 
         const hashedPassword = await bcrypt.hash(password, 10)
         const verificationCode = ("" + Math.random()).substring(2, 8)
         const validationExpires = new Date();
 
-        const finder = await Finder.create({firstName,lastName,email,password:hashedPassword,validationCode:verificationCode,validationExpires})
+        const school = await School.create({name,email,phone,password:hashedPassword,website,registrationDocs,validationCode:verificationCode,validationExpires})
 
         const data = {
 
@@ -83,51 +101,48 @@ const finderSignUp = async (request, response) => {
         })
 
 
-        response.status(201).json({status:true, message:"Account Created Please Verify Your Email",email})
-
-
-
+        response.status(201).json({status:true, message:"School Registration Sucessful, Verify Email to Complete the Process",email})
 
 
     } catch (error) {
         
         console.log(error)
-        response.status(500).json({status:false, message:"Internal Server Error"})
+        response.status(500).json({status:false, message:"internal Server Error"})
     }
 
 }
 
-const verifyFinderEmail = async (request, response) => {
+const verifySchool = async (request, response) => {
     
     const { email, code } = request.body
-    
+
     try{
 
         if (!email) {
             
-            return response.status(422).json({status:false, message:"Email is Required" })
+            return response.status(422).json({status:false, message:"an Error Occured Try Loging In again",issue:"Email Could Not Be Found and this is a Developer Error"})
         }
 
         if(!code){
-
-            return response.status(422).json({status:false, message:"Validation Code Missing"})
-        }
-
-        const finder = await Finder.findOne({ email })
-        
-        if(!finder){
-
-            return response.status(401).json({status:false, message:"an Error Occured"})
-        }
-
-        
-        if (code !== finder.validationCode) {
             
-            return response.status(401).json({status:false, message:"Invalid Validation Code"})
+            return response.status(422).json({status:false, message:"Verification Code Missing"})
         }
+
+        const school = await School.findOne({ email })
+        
+        if (!school) {
+            
+            return response.status(422).json({status:false, message:"an Error Occured Try Loging In again"})
+        }
+
+        if(code !== school.validationCode){
+
+            return response.status(401).json({status:false, message:"Invalid Verification Code"})
+        }
+
 
         const currentDate = new Date()
-        const sentDate = new Date(finder.validationExpires)
+        const sentDate = new Date(school.validationExpires)
         const minutesAgo = currentDate.getMinutes() - sentDate.getMinutes()
 
         console.log(minutesAgo)
@@ -142,10 +157,10 @@ const verifyFinderEmail = async (request, response) => {
 
         const verificationCode = ("" + Math.random()).substring(2, 8)
 
-            finder.validationCode = verificationCode
-            finder.validationExpires = new Date()
+            school.validationCode = verificationCode
+            school.validationExpires = new Date()
 
-            await finder.save()
+            await school.save()
             
         const data = {
 
@@ -176,70 +191,67 @@ const verifyFinderEmail = async (request, response) => {
         }
 
 
-        finder.validationCode = undefined
-        finder.validationExpires = undefined
-        finder.validated = true
-        const token = jwt.sign({ finder }, jwtsecret) 
-        finder.token = token
-        await finder.save()
+        school.validationCode = undefined
+        school.validationExpires = undefined
+        school.validated = true
+        const token = jwt.sign({ school }, jwtsecret)
+        school.token = token
 
-        const updatedFinder = await Finder.findOne({ email })
-        
-        response.status(201).json({status:true, message:"Email Verified Successfully",finder:updatedFinder})
+        await school.save()
 
+        const updatedSchool = await School.findOne({email})
 
-
+        response.status(201).json({status:true, message:"Account Verified Successfully",school:updatedSchool})
 
     }catch(error){
 
-        console.log(error)
         response.status(500).json({status:false, message:"Internal Server Error"})
+        console.log(error)
     }
-
 }
 
-
-
-const loginFinder = async (request, response) => {
+const loginSchool = async (request, response) => {
     
-    const {email,password} = request.body
-
+    const { email, password } = request.body
+    
     try{
 
         if (!email) {
-       
-         return response.status(422).json({status:false, message:"Email is Required"})
-        }
-        
-
-        if (!password) {
-    
-        return response.status(422).json({status:false, message:"Password Required"})
-        }
-        
-        const finder = await Finder.findOne({ email })
-        
-        if(!finder){
-
-            return response.status(401).json({status:false, message:"Invalid Credentials"})
-        }
-
-        const passwordIsValid = await bcrypt.compare(password,finder.password)
-
-        if (!passwordIsValid) {
             
+            return response.status(422).json({status:false, message:"School Email is Required"})
+        }
+        
+        if(!password){
+
+        return response.status(422).json({ status: false, message: "Password is Required" })
+           
+        }
+
+        const school = await School.findOne({ email })
+        
+        if (!school) {
+            
+
             return response.status(401).json({status:false, message:"Invalid Credentials"})
         }
 
-        if(!finder.validated){
+        const passwordIsValid = await bcrypt.compare(password, school.password)
+        
+        if (!passwordIsValid) {
+        
+         return response.status(401).json({status:false, message:"Invalid Credentials"})
+
+        }
+
+        if(!school.validated){
 
             const verificationCode = ("" + Math.random()).substring(2, 8)
             const validationExpires = new Date();
 
-            finder.validationCode = verificationCode
-            finder.validationExpires = validationExpires
+            school.validationCode = verificationCode
+            school.validationExpires = validationExpires
 
-            await finder.save()
+            await school.save()
 
         const data = {
 
@@ -267,28 +279,24 @@ const loginFinder = async (request, response) => {
 
 
             return response.status(401).json({status:false, message:"Please Your Verify Email",email})
+
+
         }
 
+        response.status(200).json({status:true, message:"Login Sucessful",school})
 
-        response.status(200).json({status:true, message:"Login Sucessful",finder})
+    }catch(error){
 
-
-
-
-    } catch (error) {
-        console.log(error)
         response.status(500).json({status:false, message:"Internal Server Error"})
+        console.log(error)
     }
 
 }
 
 
-
-
-
 module.exports = {
 
-    finderSignUp,
-    verifyFinderEmail,
-    loginFinder
+    schoolSignUp,
+    verifySchool,
+    loginSchool
 }

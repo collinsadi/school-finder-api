@@ -1,8 +1,8 @@
-const createFinder = {
+const createSchool = {
 
-    tags: ["Finder"],
-    summary:"Finder Sign Up",
-    description: "Api Endpoint for Creating New Finder",
+    tags: ["School"],
+    summary:"School Sign Up",
+    description: "Api Endpoint for Creating New School",
     requestBody: {
 
         content: {
@@ -10,30 +10,43 @@ const createFinder = {
                 schema:{
                     type: "object",
                     properties:{
-                        firstName: {
+                        name: {
                             type: "string",
-                            description: "Finder's First Name",
+                            description: "Name of School",
                             required: true,
-                            example:"promise"
-                        },
-                        lastName: {
-                            type: "string",
-                            description: "Finder's Last Name",
-                            required: true,
-                            exmple:"promise"
+                            example:"Timi Group Schools"
                         },
                         email: {
                             type: "string",
-                            description: "Finder's Email",
+                            description: "School Email",
+                            required: true,
+                            exmple:"hello@timigroupschools.com"
+                        },
+                        phone: {
+                            type: "string",
+                            description: "School Mobile Number",
                             required: true,
                             unique: true,
-                            example:"promise@gmail.com"
+                            example:"+234 9068 149238"
                         },
                         password: {
                             type: "string",
-                            description: "Finder's Password",
+                            description: "School's Password",
                             required: true,
-                        }
+                            example:"password12345"
+                        },
+                        website: {
+                            type: "string",
+                            description: "School Website",
+                            required: true,
+                            example:"www.timigroupschool.com"
+                        },
+                        registrationDocs: {
+                            type: "string",
+                            description: "School Registration Docs",
+                            required: true,
+                            example:"https://drive.google.com/...."
+                        },
                     }
                 }
             }
@@ -84,11 +97,11 @@ const createFinder = {
     }
 }
 
-const verifyFinder = {
+const verifySchool = {
 
-    tags: ["Finder"],
-    summary:"Finder Email Verification",
-    description: "Api Endpoint for Verifying Finders Email",
+    tags: ["School"],
+    summary:"School Email Verification",
+    description: "Api Endpoint for Verifying School Email",
     requestBody: {
 
         content: {
@@ -98,9 +111,9 @@ const verifyFinder = {
                     properties:{
                         email: {
                             type: "string",
-                            description: "Finder's Email",
+                            description: "School's Email",
                             required: true,
-                            example:"promise@gmail.com"
+                            example:"hello@timigroupschools.com"
                         },
                         code: {
                             type: "string",
@@ -159,11 +172,11 @@ const verifyFinder = {
     }
 }
 
-const loginFinder = {
+const loginSchool = {
 
-    tags: ["Finder"],
-    summary:"Finder Login",
-    description: "Api Endpoint for Logging a School Finder in",
+    tags: ["School"],
+    summary:"School Login",
+    description: "Api Endpoint for Logging a  School in",
     requestBody: {
 
         content: {
@@ -173,13 +186,13 @@ const loginFinder = {
                     properties:{
                         email: {
                             type: "string",
-                            description: "Finder's Email",
+                            description: "School's Email",
                             required: true,
-                            example:"promise@gmail.com"
+                            example:"hello@timigroupschools.com"
                         },
                         password: {
                             type: "string",
-                            description: "Finder's Password",
+                            description: "School's Password",
                             required: true,
                             example:"123456"
                         }
@@ -191,7 +204,7 @@ const loginFinder = {
     },
     responses: {
         201:{
-            description: "Returns the User Data",
+            description: "Returns the School Data",
             content: {
                 "application/json":{
                     schema: {
@@ -234,11 +247,11 @@ const loginFinder = {
     }
 }
 
-const newFavorite = {
+const editAdmission = {
 
-    tags: ["Favorite"],
-    summary:"Add school to Favorite",
-    description: "Api Endpoint for adding a School to Favorite",
+    tags: ["School"],
+    summary:"Edit School Admission",
+    description: "Api Endpoint for Editing a School Admission Status",
     requestBody: {
 
         content: {
@@ -246,12 +259,22 @@ const newFavorite = {
                 schema:{
                     type: "object",
                     properties:{
-                        schoolId: {
-                            type: "string",
-                            description: "Finder's First Name",
+                        admissionStatus: {
+                            type: "boolean",
+                            description: "School's Admission Status",
                             required: true,
-                            example:"123454"
-                        }
+                            example:true
+                        },
+                        starting: {
+                            type: "string",
+                            description: "School's Admission Starting Date",
+                            example:"25-09-2023"
+                        },
+                        ending: {
+                            type: "string",
+                            description: "School's Admission Ending Date",
+                            example:"25-10-2023"
+                        },
                     }
                 }
             }
@@ -260,82 +283,14 @@ const newFavorite = {
     },
     responses: {
         201:{
-            description: "Sucessful Action",
+            description: "Successful Action",
             content: {
                 "application/json":{
                     schema: {
                         type: "object",
                         example: {
                             status:true,
-                            message: "School Added to Favorite"
-                        }
-                    }
-                }
-            }
-        },
-        400:{
-            description: "School Exists in User's ",
-            content: {
-                "application/json":{
-                    schema: {
-                        type: "object",
-                        example: {
-                            message: "School already in Favorite"
-                        }
-                    }
-                }
-            }
-        },
-        500:{
-            description: "Server Side Error",
-            content: {
-                "application/json":{
-                    schema: {
-                        type: "object",
-                        example: {
-                            message: "Internal Server Error"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-const removeFavorite = {
-
-    tags: ["Favorite"],
-    summary:"Remove School From Favorite",
-    description: "Api Endpoint for removing a School from user's Favorite",
-    requestBody: {
-
-        content: {
-            "Application/Json":{
-                schema:{
-                    type: "object",
-                    properties:{
-                        schoolId: {
-                            type: "string",
-                            description: "Id of School to Remove",
-                            required: true,
-                            example:"123454"
-                        }
-                    }
-                }
-            }
-        }
-
-    },
-    responses: {
-        200:{
-            description: "Sucessful Action",
-            content: {
-                "application/json":{
-                    schema: {
-                        type: "object",
-                        example: {
-                            status:true,
-                            message: "School Removed from Favorite"
+                            message: "Admission Status Updated"
                         }
                     }
                 }
@@ -348,7 +303,8 @@ const removeFavorite = {
                     schema: {
                         type: "object",
                         example: {
-                            message: "School Id is missing"
+                            status:false,
+                            message: "Specify a Starting Date for Admission or Turn off Admission Status"
                         }
                     }
                 }
@@ -370,14 +326,160 @@ const removeFavorite = {
     }
 }
 
-const allFavorites = {
+const editFees = {
 
-    tags: ["Favorite"],
-    summary:"Get Finder's Favorite",
-    description: "Api Endpoint for Getting Favorites Belonging to the Logged In User",
-   
+    tags: ["School"],
+    summary:"Edit School Fee",
+    description: "Api Endpoint for Editing a School Fee Status",
+    requestBody: {
+
+        content: {
+            "Application/Json":{
+                schema:{
+                    type: "object",
+                    properties:{
+                        fee: {
+                            type: "string",
+                            description: "School's Fee",
+                            example:"300000"
+                        },
+                        method: {
+                            type: "string",
+                            description: "School's Payment Method",
+                            example:"transfer"
+                        },
+                        scholarship: {
+                            type: "string",
+                            description: "School's Scholarship Info",
+                        },
+                    }
+                }
+            }
+        }
+
+    },
     responses: {
-      
+        201:{
+            description: "Successful Action",
+            content: {
+                "application/json":{
+                    schema: {
+                        type: "object",
+                        example: {
+                            status:true,
+                            message: "Fees Status Updated"
+                        }
+                    }
+                }
+            }
+        },
+        422:{
+            description: "Required Field Missing",
+            content: {
+                "application/json":{
+                    schema: {
+                        type: "object",
+                        example: {
+                            status:false,
+                            message: "School Fees is Required"
+                        }
+                    }
+                }
+            }
+        },
+        500:{
+            description: "Server Side Error",
+            content: {
+                "application/json":{
+                    schema: {
+                        type: "object",
+                        example: {
+                            message: "Internal Server Error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+const editContact = {
+
+    tags: ["School"],
+    summary:"Edit School Contact Information",
+    description: "Api Endpoint for Editing a School Contact Informations",
+    requestBody: {
+
+        content: {
+            "Application/Json":{
+                schema:{
+                    type: "object",
+                    properties:{
+                        website: {
+                            type: "string",
+                            description: "School's Website",
+                            example:"www.timischools.com"
+                        },
+                        address: {
+                            type: "string",
+                            description: "School's Address",
+                            example:"port harcourt, Nigeria"
+                        },
+                        phone: {
+                            type: "string",
+                            description: "0814444444444",
+                        },
+                        email: {
+                            type: "string",
+                            description: "admin@test.com",
+                        },
+                    }
+                }
+            }
+        }
+
+    },
+    responses: {
+        201:{
+            description: "Successful Action",
+            content: {
+                "application/json":{
+                    schema: {
+                        type: "object",
+                        example: {
+                            status:true,
+                            message: "Contact Details Updated"
+                        }
+                    }
+                }
+            }
+        },
+        422:{
+            description: "Required Field Missing",
+            content: {
+                "application/json":{
+                    schema: {
+                        type: "object",
+                        example: {
+                            status:false,
+                        }
+                    }
+                }
+            }
+        },
+        500:{
+            description: "Server Side Error",
+            content: {
+                "application/json":{
+                    schema: {
+                        type: "object",
+                        example: {
+                            message: "Internal Server Error"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -387,36 +489,41 @@ const allFavorites = {
 
 
 
-const finderRoute = {
+
+
+
+
+
+const schoolRoute = {
 
     
-    "/v1/finder/signup":  {
+    "/v1/school/signup":  {
 
-        post: createFinder,
+        post: createSchool,
     },
     
-    "/v1/finder/signup/verify":  {
+    "/v1/school/signup/verify":  {
 
-        post:verifyFinder,
+        post:verifySchool,
     },
-    "/v1/finder/login":  {
+    "/v1/school/login":  {
 
-        post:loginFinder,
+        post:loginSchool,
     },
-    "/v1/finder/favorite/new":  {
+    "/v1/school/edit/admission":  {
 
-        post:newFavorite,
+        post:editAdmission,
     },
-    "/v1/finder/favorite/remove":  {
+    "/v1/school/edit/fees":  {
 
-        post:removeFavorite,
+        post:editFees,
     },
-    "/v1/finder/favorite/get":  {
+    "/v1/school/edit/contact":  {
 
-        post:allFavorites,
+        post:editContact,
     },
 
 
 }
 
-module.exports = finderRoute
+module.exports = schoolRoute
