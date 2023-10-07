@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 
-const {schoolSignUp, verifySchool, loginSchool } = require("../controllers/schoolControllers/school.controller")
+const {schoolSignUp, verifySchool, loginSchool,allSchools,oneSchool } = require("../controllers/schoolControllers/school.controller")
 
 const {editAdmission,editFees,editContactDetails} = require("../controllers/schoolControllers/editSchool.controller")
 
@@ -15,6 +15,8 @@ router.post("/school/login",loginSchool)
 router.post("/school/edit/admission",schoolAuth,editAdmission)
 router.post("/school/edit/fees",schoolAuth,editFees)
 router.post("/school/edit/contact",schoolAuth,editContactDetails)
+router.get("/schools/get",allSchools)
+router.get("/schools/one",oneSchool)
 
 
 

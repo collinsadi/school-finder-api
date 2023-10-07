@@ -73,35 +73,21 @@ const schoolSignUp = async (request, response) => {
 
 
         const hashedPassword = await bcrypt.hash(password, 10)
-        const verificationCode = ("" + Math.random()).substring(2, 8)
-        const validationExpires = new Date();
+     
 
-        const school = await School.create({name,email,phone,password:hashedPassword,website,registrationDocs,validationCode:verificationCode,validationExpires})
+        const school = await School.create({name,email,phone,password:hashedPassword,website,registrationDocs})
 
-        const data = {
+    
+        
+        school.validated = true
+        const token = jwt.sign({ school }, jwtsecret)
+        school.token = token
 
-            verificationCode
-        }
+        await school.save()
 
-        const templatePath = path.join(__dirname,"..","..", "views", "confirmEmail.ejs")
+        const updatedSchool = await School.findOne({email})
 
-        ejs.renderFile(templatePath, data, (err, html) => {
-            
-            if (err) {
-                console.log("Error Rendering Ejs Template:", err)
-                
-                 response.status(400).json({status:false, message:"A Fatal Error Occured On Our End, Please Dont Panic"})
-
-                return;
-                
-            } else {
-                sendEmail(email,"Email Verification",html)
-            }
-
-        })
-
-
-        response.status(201).json({status:true, message:"School Registration Sucessful, Verify Email to Complete the Process",email})
+        response.status(201).json({status:true, message:"School Registration Sucessful,",school:updatedSchool})
 
 
     } catch (error) {
@@ -294,9 +280,47 @@ const loginSchool = async (request, response) => {
 }
 
 
+
+const allSchools = async (request, response)=>{
+
+    try{
+
+    const schools = await School.find().sort({craeatedAt:-1})
+
+
+    response.status(200).json({status:true, schools})
+    }catch(error){
+
+        console.log(error)
+    }
+
+
+}
+
+
+const oneSchool = async (request, response)=>{
+
+    const id = request.query.id
+
+    try{
+
+    const school = await School.findById(id)
+
+    response.status(200).json({status:true, school})
+
+    }catch(error){
+
+        console.log(error)
+    }
+
+}
+
+
 module.exports = {
 
     schoolSignUp,
     verifySchool,
-    loginSchool
+    loginSchool,
+    allSchools,
+    oneSchool
 }

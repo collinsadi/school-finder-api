@@ -42,7 +42,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 // MiddleWares
 app.set("view engine","ejs")
 app.use(morgan("dev"))
-app.use(express.json())
+app.use(express.json({limit:"10mb"}))
 app.use(express.urlencoded({extended:true}))
 app.use('/docs',swaggerDocs.serve)
 app.use('/docs', swaggerDocs.setup(swaggerDocumentations))

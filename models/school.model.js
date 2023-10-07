@@ -67,6 +67,12 @@ const schoolSchema = new Schema({
     validationExpires: {
         type: String
     },
+    method: {
+        type: String
+    },
+    scholarship: {
+        type: String
+    },
 
 }, { timestamps: true })
 

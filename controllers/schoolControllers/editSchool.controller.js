@@ -59,6 +59,8 @@ const editFees = async (request, response)=>{
         const school = await School.findById(id)
 
         school.fees = fee
+        school.method = method
+        school.scholarship = scholarship
 
         await school.save()
 
