@@ -232,6 +232,8 @@ const loginSchool = async (request, response) => {
 
         }
 
+        const image = await Image.findById(school.registrationDocs)
+
         if(!school.validated){
 
             const verificationCode = ("" + Math.random()).substring(2, 8)
@@ -272,7 +274,7 @@ const loginSchool = async (request, response) => {
 
         }
 
-        response.status(200).json({status:true, message:"Login Sucessful",school})
+        response.status(200).json({status:true, message:"Login Sucessful",school,image})
 
     }catch(error){
 
@@ -288,7 +290,7 @@ const allSchools = async (request, response)=>{
 
     try{
 
-    const schools = await School.find().sort({craeatedAt:-1})
+    const schools = await School.find().populate("registrationDocs").sort({craeatedAt:-1})
 
 
     response.status(200).json({status:true, schools})
@@ -307,7 +309,7 @@ const oneSchool = async (request, response)=>{
 
     try{
 
-    const school = await School.findById(id)
+    const school = await School.findById(id).populate("registrationDocs")
 
     response.status(200).json({status:true, school})
 
