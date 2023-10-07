@@ -1,5 +1,6 @@
 
 const School = require("../../models/school.model")
+const Image = require("../../models/image")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const sendEmail = require("../../config/sendEmail")
@@ -53,7 +54,7 @@ const schoolSignUp = async (request, response) => {
 
         if(!registrationDocs){
 
-            return response.status(422).json({status:false, message:"School Registration Document Required"})
+            return response.status(422).json({status:false, message:"School Image"})
         }
         
         const schoolWebsiteExists = await School.findOne({ website })
@@ -73,9 +74,11 @@ const schoolSignUp = async (request, response) => {
 
 
         const hashedPassword = await bcrypt.hash(password, 10)
+
+        const image = await Image.create({url:registrationDocs})
      
 
-        const school = await School.create({name,email,phone,password:hashedPassword,website,registrationDocs})
+        const school = await School.create({name,email,phone,password:hashedPassword,website,registrationDocs:image._id})
 
     
         

@@ -27,8 +27,8 @@ const schoolSchema = new Schema({
         required:true
     },
     registrationDocs: {
-        type: String,
-        required:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"image"
     },
     fees: {
         type: String
