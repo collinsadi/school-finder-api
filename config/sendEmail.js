@@ -7,7 +7,7 @@ const sendEmail = (email,subject,html) => {
         service:"gmail",
         auth: {
             user: "chowlinfood@gmail.com",
-            pass:"ijiqlgwxrmkvvdey"
+            pass:""
         }
     })
 
